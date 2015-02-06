@@ -16,8 +16,7 @@ module DatabaseMethods
         values << "'#{self.send(x)}'"
       end 
     end
-
-    puts "INSERT INTO #{self.class.to_s.pluralize} (#{columns}) VALUES (#{values.join(', ')})"
+    
     DATABASE.execute("INSERT INTO #{self.class.to_s.pluralize} (#{columns}) VALUES (#{values.join(', ')})")
     @id = DATABASE.last_insert_row_id
   end
