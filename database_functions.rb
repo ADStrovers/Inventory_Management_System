@@ -1,5 +1,19 @@
 module DatabaseMethods
   
+  # Public: #list_all
+  # Lists all the names from the corresponding database table.
+  # IE: Shelf.class = shelves table.
+  #
+  # Returns:
+  # Array
+  #
+  # State Changes:
+  # None
+  
+  def list_all
+    list = DATABASE.execute("SELECT name FROM #{self.class.to_s.pluralize}")
+  end
+  
   def save
     attributes = []
     instance_variables.each do |i|
