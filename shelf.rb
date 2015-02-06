@@ -21,19 +21,6 @@ class Shelf
     insert
   end
   
-  # Public: #list_all_shelves
-  # Lists all the names of the shelves located in the Database.
-  #
-  # Returns:
-  # Array
-  #
-  # State Changes:
-  # None
-  
-  def list_all_shelves
-    list = DATABASE.execute("SELECT name FROM shelves")
-  end
-  
   # Public: #list_products_stored
   # Lists all the products that have shelf_id of the current shelf.
   #
