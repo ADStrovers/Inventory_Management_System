@@ -1,26 +1,5 @@
 module DatabaseMethods
   
-  def insert
-    attributes = []
-    values = []
-    
-    instance_variables.each do |x|
-      attributes << x.to_s.delete('@')
-    end
-    
-    columns = attributes.join(", ")
-    attributes.each do |x| 
-      if self.send(x).is_a? Integer
-        values << self.send(x)
-      else
-        values << "'#{self.send(x)}'"
-      end 
-    end
-    
-    DATABASE.execute("INSERT INTO #{self.class.to_s.pluralize} (#{columns}) VALUES (#{values.join(', ')})")
-    @id = DATABASE.last_insert_row_id
-  end
-  
   def save
     attributes = []
     instance_variables.each do |i|
@@ -45,6 +24,29 @@ module DatabaseMethods
     # name = 'Sumeet', age = 75, hometown = 'San Diego'
   
     DATABASE.execute("UPDATE students SET #{query_string} WHERE id = #{id}")
+  end
+  
+  private
+  
+  def insert
+    attributes = []
+    values = []
+    
+    instance_variables.each do |x|
+      attributes << x.to_s.delete('@')
+    end
+    
+    columns = attributes.join(", ")
+    attributes.each do |x| 
+      if self.send(x).is_a? Integer
+        values << self.send(x)
+      else
+        values << "'#{self.send(x)}'"
+      end 
+    end
+    
+    DATABASE.execute("INSERT INTO #{self.class.to_s.pluralize} (#{columns}) VALUES (#{values.join(', ')})")
+    @id = DATABASE.last_insert_row_id
   end
   
 end

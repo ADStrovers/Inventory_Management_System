@@ -23,4 +23,11 @@ class ShelfTest < Minitest::Test
     assert_kind_of Integer, test.id
   end
   
+  def test_shelf_name_should_be_equal_to_passed_in_name
+    test = Shelf.new({name: "North"})
+    shelves = test.list_all_shelves
+    
+    assert_equal "North", shelves[-1]["name"]
+  end
+  
 end
