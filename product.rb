@@ -1,17 +1,17 @@
 class Product
   include DatabaseMethods
   
-  attr_reader :name, :quantity, :shelf_id, :category_id, 
-              :description, :price, :quantity, :id
+  attr_accessor :name, :quantity, :shelf_id, :category_id, 
+                :description, :price, :quantity, :id
   
   def initialize(options)
-    @name = options[:name]
-    @shelf_id = options[:shelf_id]
-    @category_id = options[:category_id]
-    @description = options[:description]
-    @price = options[:price]
-    @quantity = options[:quantity]
-    insert
+    @name = options["name"]
+    @shelf_id = options["shelf_id"]
+    @category_id = options["category_id"]
+    @description = options["description"]
+    @price = options["price"]
+    @quantity = options["quantity"]
+    @id = options["id"]
   end
   
   def list_location_of

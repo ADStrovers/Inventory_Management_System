@@ -1,17 +1,40 @@
 module DatabaseMethods
   
-  # Public: #list_all
-  # Lists all the names from the corresponding database table.
-  # IE: Shelf.class = shelves table.
-  #
-  # Returns:
-  # Array
-  #
-  # State Changes:
-  # None
+  module ClassDatabaseMethods
+    
+    # Public: #list_all
+    # Lists all the names from the corresponding database table.
+    # IE: Shelf.class = shelves table.
+    #
+    # Returns:
+    # Array
+    #
+    # State Changes:
+    # None
+    
+    def self.list_all
+      list = DATABASE.execute("SELECT name FROM #{self.class.to_s.pluralize}")
+    end
+    
+    def self.search_for(field, value)
+    
+      results_as_objects = []
+    
+      if value.is_a? INTEGER
+        results = DATABASE.execute("SELECT * FROM #{self.class.to_s.pluralize} WHERE #{field} = #{value}")
+      else
+        results = DATABASE.execute("SELECT * FROM #{self.class.to_s.pluralize} WHERE #{field} = '#{value}'")
+      end
+    
+      results.each{ |x| results_as_obecjts << x}
+    
+      results_as_objects
+    end
+    
+  end
   
-  def list_all
-    list = DATABASE.execute("SELECT name FROM #{self.class.to_s.pluralize}")
+  def self.included(base)
+    base.extend ClassDatabaseMethods
   end
   
   def save
@@ -38,6 +61,21 @@ module DatabaseMethods
     # name = 'Sumeet', age = 75, hometown = 'San Diego'
   
     DATABASE.execute("UPDATE students SET #{query_string} WHERE id = #{id}")
+  end
+  
+  def self.search_for(field, value)
+    
+    results_as_objects = []
+    
+    if value.is_a? INTEGER
+      results = DATABASE.execute("SELECT * FROM #{self.class.to_s.pluralize} WHERE #{field} = #{value}")
+    else
+      results = DATABASE.execute("SELECT * FROM #{self.class.to_s.pluralize} WHERE #{field} = '#{value}'")
+    end
+    
+    results.each{ |x| results_as_obecjts << x}
+    
+    results_as_objects
   end
   
   private
