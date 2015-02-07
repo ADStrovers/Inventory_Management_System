@@ -14,7 +14,7 @@
 class Shelf
   include DatabaseMethods
   
-  attr_reader :name, :id
+  attr_accessor :name, :id
   
   def initialize(options)
     @name = options["name"]

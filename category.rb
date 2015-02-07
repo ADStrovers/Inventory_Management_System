@@ -15,8 +15,7 @@
 class Category
   include DatabaseMethods
   
-  attr_reader :id
-  attr_accessor :name, :description
+  attr_accessor :name, :description, :id
   
   def initialize(options)
     @name = options["name"]

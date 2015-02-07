@@ -16,27 +16,35 @@ class Product
   
   def list_location_of
     loc = DATABASE.execute("SELECT name FROM shelves WHERE id = #{@shelf_id}")
-    loc[0][:name]
+    loc[0]["name"]
   end
   
-  def update_location_of
-    
+  def update_location_of(new_loc)
+    @shelf_id = new_loc
+    save
   end
   
-  def assign_new_category
-    
+  def assign_new_category(new_category)
+    @category_id = new_category
+    save
   end
   
-  def buy_product
-    
+  def buy_product(amount)
+    @quantity += amount
+    save
   end
   
-  def sell_product
-    
+  def sell_product(amount)
+    check = quantity
+    unless check - amount < 0
+      @quantity -= amount
+      save
+    end
   end
   
-  def update_cost
-    
+  def update_price(amount)
+    @price = amount
+    save
   end
   
 end
