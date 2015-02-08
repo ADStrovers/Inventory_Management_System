@@ -14,6 +14,7 @@ class Product
     @id = options["id"]
   end
   
+  
   def list_location_of
     loc = DATABASE.execute("SELECT name FROM shelves WHERE id = #{@shelf_id}")
     loc[0]["name"]
@@ -45,6 +46,10 @@ class Product
   def update_price(amount)
     @price = amount
     save
+  end
+  
+  def self.requirements
+    requirements = ["name", "shelf_id", "category_id", "description", "price", "quantity"]
   end
   
 end

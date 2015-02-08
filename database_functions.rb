@@ -14,7 +14,6 @@ module DatabaseMethods
     
     def list_all
       list = DATABASE.execute("SELECT name FROM #{self.to_s.pluralize}")
-      puts list
     end
     
     def search_for(field, value)
@@ -57,7 +56,6 @@ module DatabaseMethods
     end
   
     query_string = query_components_array.join(", ")
-    # name = 'Sumeet', age = 75, hometown = 'San Diego'
   
     DATABASE.execute("UPDATE #{self.class.to_s.pluralize} SET #{query_string} WHERE id = #{id}")
   end

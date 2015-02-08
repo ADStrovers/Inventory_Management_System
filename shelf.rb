@@ -52,4 +52,8 @@ class Shelf
     shelf_value
   end
   
+  def self.requirements
+    requirements = ["name"]
+  end
+  
 end
