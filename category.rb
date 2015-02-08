@@ -26,4 +26,8 @@ class Category
   def list_products_belonging_to
     DATABASE.execute("SELECT * FROM products WHERE category_id = #{@id}")
   end
+  
+  def self.requirements
+    requirements = ["name", "description"]
+  end
 end

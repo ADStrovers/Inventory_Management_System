@@ -14,4 +14,3 @@ require_relative 'driver'
 
 smart = Driver.new
 smart.main_prompt
-binding.pry
