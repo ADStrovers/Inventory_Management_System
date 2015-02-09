@@ -32,10 +32,35 @@ module DatabaseMethods
       list = DATABASE.execute("SELECT name FROM #{self.to_s.pluralize}")
     end
     
+    # Public: #delete
+    # Deletes the given id from the class's database
+    #
+    # Parameters:
+    # id - Integer: Primary ID of the row to be deleted.
+    #
+    # Returns:
+    # Array
+    #
+    # State Changes:
+    # None
+    
     def delete(id)
       DATABASE.execute("DELETE FROM #{self.to_s.pluralize} WHERE id = #{id}")
     end
-      
+    
+    # Public: #search_for
+    # Searches the classes database based on input
+    #
+    # Parameters:
+    # field - String: the field within the database to search
+    # value - String: The value to search within the field for.
+    #
+    # Returns:
+    # Array
+    #
+    # State Changes:
+    # None
+    
     def search_for(field, value)
     
       results_as_objects = []
@@ -53,9 +78,30 @@ module DatabaseMethods
     
   end
   
+  # Private: #included
+  # Auto call on include from class.  Used to extend module.
+  #
+  # Parameters:
+  # base: String: name of the class being included in.
+  #
+  # Returns:
+  # nil
+  #
+  # State Changes:
+  # None
+  
   def self.included(base)
     base.extend ClassDatabaseMethods
   end
+  
+  # Public: #save
+  # Saves the given object to the database
+  #
+  # Returns:
+  # []
+  #
+  # State Changes:
+  # None
   
   def save
     attributes = []
@@ -79,6 +125,15 @@ module DatabaseMethods
   
     DATABASE.execute("UPDATE #{self.class.to_s.pluralize} SET #{query_string} WHERE id = #{id}")
   end
+  
+  # Public: #insert
+  # Inserts the given object into the database and assigns @id to it.
+  #
+  # Returns:
+  # @id
+  #
+  # State Changes:
+  # @id
   
   def insert
     attributes = []

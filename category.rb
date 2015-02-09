@@ -23,9 +23,9 @@ class Category
     @id = options["id"]
   end
   
-  def list_products_belonging_to
-    DATABASE.execute("SELECT name FROM products WHERE category_id = #{@id}")
-  end
+  # def list_products_belonging_to
+  #   DATABASE.execute("SELECT name FROM products WHERE category_id = #{@id}")
+  # end
   
   
   # Public: .requirements

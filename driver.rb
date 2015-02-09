@@ -195,6 +195,7 @@ class Driver
         case value.downcase
         when "back"
           self.send(last_prompt)
+          @last_prompt = __method__
           break
         when "exit"
           close_message
@@ -266,6 +267,7 @@ class Driver
       gets.chomp
     end
     main_prompt
+    @last_method = __method
   end
     
   def fetch_shelf_prompt
@@ -313,6 +315,7 @@ class Driver
       gets.chomp
     end
     main_prompt
+    @last_prompt = __method__
   end
   
   def fetch_category_prompt
