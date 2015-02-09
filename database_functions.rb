@@ -16,6 +16,10 @@ module DatabaseMethods
       list = DATABASE.execute("SELECT name FROM #{self.to_s.pluralize}")
     end
     
+    def delete(id)
+      DATABASE.execute("DELETE FROM #{self.to_s.pluralize} WHERE id = #{id}")
+    end
+      
     def search_for(field, value)
     
       results_as_objects = []

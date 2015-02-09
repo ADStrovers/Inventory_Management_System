@@ -41,10 +41,7 @@ class Driver
   end
   
   def submenu(type)
-    system("clear")
-    puts "-"*75
-    puts "Welcome to #{type.capitalize} Management System".center(75)
-    puts "-"*75
+    suite_intro(type)
     puts "What would you like to work with today? "
     puts "Please choose an option below: "
     puts "1. Create a new #{type.capitalize}"
@@ -86,13 +83,7 @@ class Driver
   
   def create_product_prompt
     create_hash = {}
-    
-    system("clear")
-    puts "-"*75
-    puts "Welcome to the Product Creation Suite - PCS"
-    puts "-"*75
-    puts "Note: At any time you can type back to go back to the previous screen and "
-    puts "      exit to close out of SMART"
+    suite_intro("product")
     prompt_loop = Product.requirements
     prompt_loop.each do |key|
       puts "Please insert the products' #{key}:"
@@ -147,11 +138,7 @@ class Driver
   
   def create_shelf_prompt
       create_hash = {}
-      puts "-"*75
-      puts "Welcome to the Shelf Creation Suite - SCS"
-      puts "-"*75
-      puts "Note: At any time you can type back to go back to the previous screen and "
-      puts "      exit to close out of SMART"
+      suite_intro("shelf")
       prompt_loop = Shelf.requirements
       prompt_loop.each do |key|
         puts "Please insert the Shelf's #{key}:"
@@ -169,9 +156,9 @@ class Driver
             puts "I'm sorry.  You must give your Shelf a #{key}.  Please try again."
             value = gets.chomp
           end
+          create_hash[key] = value
         end
       end
-      create_hash[key] = value
       system("clear")
       puts "Creating your new Shelf now!  Thank you."
       new_item = Shelf.new(create_hash)
@@ -187,11 +174,7 @@ class Driver
     
     def create_category_prompt
       create_hash = {}
-      puts "-"*75
-      puts "Welcome to the Category Creation Suite - CCS"
-      puts "-"*75
-      puts "Note: At any time you can type back to go back to the previous screen and "
-      puts "      exit to close out of SMART"
+      suite_intro("category")
       prompt_loop = Category.requirements
       prompt_loop.each do |key|
         puts "Please insert the Category's #{key}:"
@@ -209,8 +192,8 @@ class Driver
             value = gets.chomp
           end
         end
+        create_hash[key] = value
       end
-      create_hash[key] = value
       system("clear")
       puts "Creating your new Category now!  Thank you."
       new_item = Shelf.new(create_hash)
@@ -225,12 +208,7 @@ class Driver
   end
   
   def fetch_product_prompt
-    system("clear")
-    puts "-"*75
-    puts "Welcome to the Product Search Suite - PSS"
-    puts "-"*75
-    puts "Note: At any time you can type back to go back to the previous screen and "
-    puts "      exit to close out of SMART"
+    suite_intro("product")
     puts ""
     puts "Please enter the field you would like to search by:"
     puts "(Possible fields are: name, shelf_id, category_id, description"
@@ -278,12 +256,7 @@ class Driver
   end
     
   def fetch_shelf_prompt
-    system("clear")
-    puts "-"*75
-    puts "Welcome to the Shelf Search Suite - SSS"
-    puts "-"*75
-    puts "Note: At any time you can type back to go back to the previous screen and "
-    puts "      exit to close out of SMART"
+    suite_intro("shelf")
     puts ""
     puts "Please enter the field you would like to search by:"
     puts "(Possible fields are: name, id)"
@@ -329,13 +302,8 @@ class Driver
     main_prompt
   end
   
-  def fetch_shelf_prompt
-    system("clear")
-    puts "-"*75
-    puts "Welcome to the Category Search Suite - CSS"
-    puts "-"*75
-    puts "Note: At any time you can type back to go back to the previous screen and "
-    puts "      exit to close out of SMART"
+  def fetch_category_prompt
+    suite_intro("category")
     puts ""
     puts "Please enter the field you would like to search by:"
     puts "(Possible fields are: name, description, id)"
@@ -381,6 +349,351 @@ class Driver
     main_prompt
   end
   
+  def modify_product_prompt
+    suite_intro("product")
+    puts ""
+    puts "Please enter the ID of the product you wish to view/modify:"
+    id = gets.chomp
+    while id.to_i == 0
+      puts "I'm sorry, #{id} is not a valid ID number.  Please try again"
+      id = gets.chomp
+    end
+    obj = Product.search_for("id", "#{id}")
+    if obj == []
+      puts "I'm sorry, #{id} is not a valid ID number yet.  Please search for a valid id."
+      puts "Thank you."
+      sleep 2
+      main_prompt
+    else
+      object = Product.new(obj[0])
+      puts "Here are your product's details:"
+      puts "Name: #{object.name}"
+      puts "Shelf ID: #{object.shelf_id}"
+      puts "Category ID: #{object.category_id}"
+      puts "Descrption: #{object.description}"
+      puts "Price: #{object.price.to_f / 100}"
+      puts "Quantity: #{object.quantity}"
+      puts "ID: #{object.id}"
+      puts ""
+      puts "If you would like to modify one of these values, please enter"
+      puts "  the name of the field below: "
+      field = gets.chomp.downcase
+      case field
+      when "back"
+        self.send(@last_prompt)
+      when "exit"
+        close_message
+      else
+        until Product.requirements.include?(field)
+          puts "Sorry.  #{value.capitalize} is not a proper field name.  Please try again."
+          field = gets.chomp.downcase
+        end
+        puts "Now enter what you would like the value of #{field} to be: "
+        value = gets.chomp
+        puts "You have entered #{value} for field #{field}.  Is this correct?"
+        puts "Type yes to make changes or anything else to throw the changes out."
+        response = gets.chomp
+        if response.downcase == "yes"
+          object.send("#{field}=", value)
+          object.save
+          puts "Saving changes to the database."
+          sleep 1
+          puts "Sending you back to the main page."
+          sleep 1
+          main_prompt
+        else
+          puts "You did not save the changes."
+          sleep 1
+          puts "Now sending you back to the main prompt."
+          sleep 1
+          main_prompt
+        end
+      end
+    end
+  end  
+  
+  def modify_shelf_prompt
+    suite_intro("shelf")
+    puts ""
+    puts "Please enter the ID of the shelf you wish to view/modify:"
+    id = gets.chomp
+    while id.to_i == 0
+      puts "I'm sorry, #{id} is not a valid ID number.  Please try again"
+      id = gets.chomp
+    end
+    obj = Shelf.search_for("id", "#{id}")
+    if obj == []
+      puts "I'm sorry, #{id} is not a valid ID number yet.  Please search for a valid id."
+      puts "Thank you."
+      sleep 2
+      main_prompt
+    else
+      object = Shelf.new(obj[0])
+      puts "Here are your product's details:"
+      puts "Name: #{object.name}"
+      puts "ID: #{object.id}"
+      puts ""
+      puts "If you would like to modify one of these values, please enter"
+      puts "  the name of the field below: "
+      field = gets.chomp.downcase
+      case field
+      when "back"
+        self.send(@last_prompt)
+      when "exit"
+        close_message
+      else
+        until Shelf.requirements.include?(field)
+          puts "Sorry.  #{value.capitalize} is not a proper field name.  Please try again."
+          field = gets.chomp.downcase
+        end
+        puts "Now enter what you would like the value of #{field} to be: "
+        value = gets.chomp
+        puts "You have entered #{value} for field #{field}.  Is this correct?"
+        puts "Type yes to make changes or anything else to throw the changes out."
+        response = gets.chomp
+        if response.downcase == "yes"
+          object.send("#{field}=", value)
+          object.save
+          puts "Saving changes to the database."
+          sleep 1
+          puts "Sending you back to the main page."
+          sleep 1
+          main_prompt
+        else
+          puts "You did not save the changes."
+          sleep 1
+          puts "Now sending you back to the main prompt."
+          sleep 1
+          main_prompt
+        end
+      end
+    end
+  end
+  
+  def modify_category_prompt
+    suite_intro("category")
+    puts ""
+    puts "Please enter the ID of the category you wish to view/modify:"
+    id = gets.chomp
+    while id.to_i == 0
+      puts "I'm sorry, #{id} is not a valid ID number.  Please try again"
+      id = gets.chomp
+    end
+    obj = Category.search_for("id", "#{id}")
+    if obj == []
+      puts "I'm sorry, #{id} is not a valid ID number yet.  Please search for a valid id."
+      puts "Thank you."
+      sleep 2
+      main_prompt
+    else
+      object = Category.new(obj[0])
+      puts "Here are your product's details:"
+      puts "Name: #{object.name}"
+      puts "Description: #{object.description}"
+      puts "ID: #{object.id}"
+      puts ""
+      puts "If you would like to modify one of these values, please enter"
+      puts "  the name of the field below: "
+      field = gets.chomp.downcase
+      case field
+      when "back"
+        self.send(@last_prompt)
+      when "exit"
+        close_message
+      else
+        until Category.requirements.include?(field)
+          puts "Sorry.  #{value.capitalize} is not a proper field name.  Please try again."
+          field = gets.chomp.downcase
+        end
+        puts "Now enter what you would like the value of #{field} to be: "
+        value = gets.chomp
+        puts "You have entered #{value} for field #{field}.  Is this correct?"
+        puts "Type yes to make changes or anything else to throw the changes out."
+        response = gets.chomp
+        if response.downcase == "yes"
+          object.send("#{field}=", value)
+          object.save
+          puts "Saving changes to the database."
+          sleep 1
+          puts "Sending you back to the main page."
+          sleep 1
+          main_prompt
+        else
+          puts "You did not save the changes."
+          sleep 1
+          puts "Now sending you back to the main prompt."
+          sleep 1
+          main_prompt
+        end
+      end
+    end
+  end 
+  
+  def delete_product_prompt
+    suite_intro("product")
+    puts ""
+    puts "Please enter the ID of the product you wish to delete:"
+    id = gets.chomp
+    while id.to_i == 0
+      puts "I'm sorry, #{id} is not a valid ID number.  Please try again"
+      id = gets.chomp
+    end
+    obj = Product.search_for("id", "#{id}")
+    if obj == []
+      puts "I'm sorry, #{id} is not a valid ID number yet.  Please search for a valid id."
+      puts "Thank you."
+      sleep 2
+      main_prompt
+    else
+      object = Product.new(obj[0])
+      puts "Here are your product's details:"
+      puts "Name: #{object.name}"
+      puts "Shelf ID: #{object.shelf_id}"
+      puts "Category ID: #{object.category_id}"
+      puts "Descrption: #{object.description}"
+      puts "Price: #{object.price.to_f / 100}"
+      puts "Quantity: #{object.quantity}"
+      puts "ID: #{object.id}"
+      puts ""
+      puts "Would you like to delete this product? (yes/no)"
+      answer = gets.chomp.downcase
+      case answer
+      when "back"
+        self.send(@last_prompt)
+      when "exit"
+        close_message
+      when "yes"
+          Product.delete(id)
+          puts "Deleting the product from the database."
+          sleep 1
+          puts "Sending you back to the main page."
+          sleep 1
+          main_prompt
+      else
+        puts "You chose not to delete the product."
+        sleep 1
+        puts "Now sending you back to the main prompt."
+        sleep 1
+        main_prompt
+      end
+    end
+  end  
+  
+  def delete_category_prompt
+    suite_intro("category")
+    puts ""
+    puts "Please enter the ID of the category you wish to delete:"
+    id = gets.chomp
+    while id.to_i == 0
+      puts "I'm sorry, #{id} is not a valid ID number.  Please try again"
+      id = gets.chomp
+    end
+    obj = Category.search_for("id", "#{id}")
+    if obj == []
+      puts "I'm sorry, #{id} is not a valid ID number yet.  Please search for a valid id."
+      puts "Thank you."
+      sleep 2
+      main_prompt
+    else
+      object = Category.new(obj[0])
+      puts "Here are your category's details:"
+      puts "Name: #{object.name}"
+      puts "Descrption: #{object.description}"
+      puts "ID: #{object.id}"
+      puts ""
+      puts "Would you like to delete this category? (yes/no)"
+      answer = gets.chomp.downcase
+      case answer
+      when "back"
+        self.send(@last_prompt)
+      when "exit"
+        close_message
+      when "yes"
+        if DATABASE.execute("SELECT * FROM products WHERE category_id = #{id}") == []
+          Product.delete(id)
+          puts "Deleting the category from the database."
+          sleep 1
+          puts "Sending you back to the main page."
+          sleep 2
+          main_prompt
+        else
+          puts "I'm sorry, you cannot delete that category as it still has products"
+          puts "assigned to it."
+          sleep 1
+          puts "Now sending you back to the main prompt."
+          sleep 2
+          main_prompt
+        end
+        Product.delete(id)
+        puts "Deleting the category from the database."
+        sleep 1
+        puts "Sending you back to the main page."
+        sleep 2
+        main_prompt
+      else
+        puts "You chose not to delete the category."
+        sleep 1
+        puts "Now sending you back to the main prompt."
+        sleep 2
+        main_prompt
+      end
+    end
+  end 
+  
+  def delete_shelf_prompt
+    suite_intro("shelf")
+    puts ""
+    puts "Please enter the ID of the shelf you wish to delete:"
+    id = gets.chomp
+    while id.to_i == 0
+      puts "I'm sorry, #{id} is not a valid ID number.  Please try again"
+      id = gets.chomp
+    end
+    obj = Shelf.search_for("id", "#{id}")
+    if obj == []
+      puts "I'm sorry, #{id} is not a valid ID number yet.  Please search for a valid id."
+      puts "Thank you."
+      sleep 2
+      main_prompt
+    else
+      object = Shelf.new(obj[0])
+      puts "Here are your Shelf's details:"
+      puts "Name: #{object.name}"
+      puts "ID: #{object.id}"
+      puts ""
+      puts "Would you like to delete this shelf? (yes/no)"
+      answer = gets.chomp.downcase
+      case answer
+      when "back"
+        self.send(@last_prompt)
+      when "exit"
+        close_message
+      when "yes"
+        if DATABASE.execute("SELECT * FROM products WHERE shelf_id = #{id}") == []
+          Product.delete(id)
+          puts "Deleting the shelf from the database."
+          sleep 1
+          puts "Sending you back to the main page."
+          sleep 1
+          main_prompt
+        else
+          puts "I'm sorry, you cannot delete that shelf as it still has products"
+          puts "assigned to it."
+          sleep 1
+          puts "Now sending you back to the main prompt."
+          sleep 2
+          main_prompt
+        end
+      else
+        puts "You chose not to delete the shelf."
+        sleep 1
+        puts "Now sending you back to the main prompt."
+        sleep 1
+        main_prompt
+      end
+    end
+  end 
+  
   def close_message
     system("clear")
     puts "Thank you for using SMART.  We hope to see you again soon!"
@@ -388,4 +701,14 @@ class Driver
     system("clear")
   end
   
+  private
+  
+  def suite_intro(type)
+    system("clear")
+    puts "-"*75
+    puts "Welcome to the #{type.capitalize} Management Suite".center(75)
+    puts "-"*75
+    puts "Note: At any time you can type back to go back to the previous screen and "
+    puts "      exit to close out of SMART"
+  end
 end
