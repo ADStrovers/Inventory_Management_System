@@ -7,9 +7,9 @@
 # @name - String: Name given to Shelf
 #
 # Public Methods:
-# #list_all_shelves
 # #list_products_stored
 # #get_value_of_shelf
+# .requirements
 
 class Shelf
   include DatabaseMethods
@@ -51,6 +51,15 @@ class Shelf
     end
     shelf_value
   end
+  
+  # Public: .requirements
+  # Class method that returns the instance methods of a Shelf item minus @id.
+  #
+  # Returns:
+  # Array
+  #
+  # State Changes:
+  # None
   
   def self.requirements
     requirements = ["name"]

@@ -1,3 +1,14 @@
+# Class: Driver
+#
+# Handles all the input and output between the end user and the program
+#
+# Attributes:
+# @last_prompt:     String - Holds the name of the last method that was called.
+# @current_prompt:  String - Holds the name fo the current method being displayed. 
+#
+# Public Methods:
+# #main_prompt
+
 class Driver
   def initialize
     @last_prompt = ""
@@ -39,6 +50,8 @@ class Driver
       self.send(@current_prompt)
     end
   end
+  
+  private 
   
   def submenu(type)
     suite_intro(type)
@@ -120,20 +133,20 @@ class Driver
             value = gets.chomp
           end
         end
+        create_hash[key] = value
       end
-      create_hash[key] = value
-      system("clear")
-      puts "Creating your new Product now!  Thank you."
-      new_item = Product.new(create_hash)
-      new_item.insert
-      sleep 1
-      puts "Your new product has been successfully entered with an ID of #{new_item.id}."
-      sleep 1
-      puts "Returning you to the main menu. One moment..."
-      sleep 2
-      main_prompt
-      @last_prompt = __method__
     end
+    system("clear")
+    puts "Creating your new Product now!  Thank you."
+    new_item = Product.new(create_hash)
+    new_item.insert
+    sleep 1
+    puts "Your new product has been successfully entered with an ID of #{new_item.id}."
+    sleep 1
+    puts "Returning you to the main menu. One moment..."
+    sleep 2
+    main_prompt
+    @last_prompt = __method__
   end
   
   def create_shelf_prompt
@@ -196,7 +209,7 @@ class Driver
       end
       system("clear")
       puts "Creating your new Category now!  Thank you."
-      new_item = Shelf.new(create_hash)
+      new_item = Category.new(create_hash)
       new_item.insert
       sleep 1
       puts "Your new category has been successfully entered with an ID of #{new_item.id}."
@@ -376,7 +389,7 @@ class Driver
       puts "ID: #{object.id}"
       puts ""
       puts "If you would like to modify one of these values, please enter"
-      puts "  the name of the field below: "
+      puts "  the name of the field below: (Cannot edit ID number.  Sorry.)"
       field = gets.chomp.downcase
       case field
       when "back"
@@ -434,7 +447,7 @@ class Driver
       puts "ID: #{object.id}"
       puts ""
       puts "If you would like to modify one of these values, please enter"
-      puts "  the name of the field below: "
+      puts "  the name of the field below: (Cannot edit ID number.  Sorry.)"
       field = gets.chomp.downcase
       case field
       when "back"
@@ -443,7 +456,7 @@ class Driver
         close_message
       else
         until Shelf.requirements.include?(field)
-          puts "Sorry.  #{value.capitalize} is not a proper field name.  Please try again."
+          puts "Sorry.  #{field.capitalize} is not a proper field name.  Please try again."
           field = gets.chomp.downcase
         end
         puts "Now enter what you would like the value of #{field} to be: "
@@ -493,7 +506,7 @@ class Driver
       puts "ID: #{object.id}"
       puts ""
       puts "If you would like to modify one of these values, please enter"
-      puts "  the name of the field below: "
+      puts "  the name of the field below: (Cannot edit ID number.  Sorry.)"
       field = gets.chomp.downcase
       case field
       when "back"
@@ -700,8 +713,6 @@ class Driver
     sleep 3
     system("clear")
   end
-  
-  private
   
   def suite_intro(type)
     system("clear")

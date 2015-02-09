@@ -1,4 +1,20 @@
+# Module: DatabaseMethods
+#
+# In charge of giving classes all of the common instance methods for database functions
+#
+# Public Methods:
+# #save
+# #insert
+
 module DatabaseMethods
+  
+  # Module: ClassDatabaseMethods
+  #
+  # In charge of giving classes all of the common class methods for database functions
+  #
+  # Public Methods:
+  # #save
+  # #insert
   
   module ClassDatabaseMethods
     
