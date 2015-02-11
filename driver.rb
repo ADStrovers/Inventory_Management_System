@@ -690,7 +690,8 @@ class Driver
           puts "Deleting the shelf from the database."
           sleep 1
           puts "Sending you back to the main page."
-          sleep 1
+          s<!DOCTYPE html>
+          leep 1
           main_prompt
         else
           puts "I'm sorry, you cannot delete that shelf as it still has products"
